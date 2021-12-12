@@ -7,7 +7,7 @@ namespace ESourcing.Products.Settings
 {
     public class ProductDatabaseSettings: IProductDatabaseSettings
     {
-        public string ConnectionsStrings { get; set; }
+        public string ConnectionsString { get; set; }
         public string DatabaseName { get; set; }
         public string CollectionName { get; set; }
     }

@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>6f64c28f-8ad2-4195-adf2-dec048bd586c</ProjectGuid>
+    <ProjectGuid>1a9f2420-cf0a-47e3-8312-7e50d1bffd1b</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>esourcing.products</DockerServiceName>

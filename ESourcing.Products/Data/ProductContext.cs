@@ -13,7 +13,7 @@ namespace ESourcing.Products.Data
     {
         public ProductContext(IProductDatabaseSettings settings)
         {
-            var client = new MongoClient(settings.ConnectionsStrings);
+            var client = new MongoClient(settings.ConnectionsString);
             var database = client.GetDatabase(settings.DatabaseName);
             Products = database.GetCollection<Product>(settings.CollectionName);
             ProductContextSeed.SeedData(Products);
