@@ -29,6 +29,10 @@ namespace ESourcing.Order
             services.AddControllers();
             services.AddInfrastructure(Configuration);
             services.AddApplication();
+            services.AddSwaggerGen(p=> 
+            {
+                p.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Order Api", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +50,12 @@ namespace ESourcing.Order
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(p => 
+            {
+                p.SwaggerEndpoint("/swagger/v1/swagger.json","Order Api v1");
             });
         }
     }

@@ -18,13 +18,14 @@ namespace ESourcing.Order.Extensions
                 try
                 {
                     var orderContext = scope.ServiceProvider.GetRequiredService<OrderContext>();
-                    if(orderContext.Database.ProviderName!="Microsoft.EntityFrameworkCoreInMemory")
+                    if(orderContext.Database.ProviderName!="Microsoft.EntityFrameworkCore.InMemory")
                     {
                         orderContext.Database.Migrate();
                     }
                     OrderContextSeed.SeedAsync(orderContext).Wait();
                 }
-                catch (Exception)
+                catch (Exception ex)
+
                 {
 
                     throw;
