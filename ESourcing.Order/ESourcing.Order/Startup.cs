@@ -1,3 +1,6 @@
+using ESourcing.Order.Consumers;
+using ESourcing.Order.Extensions;
+using EventBusRabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ordering.Application;
 using Ordering.Infrastructure;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +33,32 @@ namespace ESourcing.Order
             services.AddControllers();
             services.AddInfrastructure(Configuration);
             services.AddApplication();
+
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBus:HostName"]
+                };
+                if (!string.IsNullOrWhiteSpace(Configuration["EventBus:UserName"]))
+                {
+                    factory.UserName = Configuration["EventBus:UserName"];
+                }
+                if (!string.IsNullOrWhiteSpace(Configuration["EventBus:Password"]))
+                {
+                    factory.UserName = Configuration["EventBus:Password"];
+                }
+                var retryCount = 5;
+                if (!string.IsNullOrWhiteSpace(Configuration["EventBus:RetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBus:RetryCount"]);
+                }
+                return new DefaultRabbitMQPersistentConnection(factory, retryCount, logger);
+            });
+
+            services.AddSingleton<EventBusOrderCreateConsumer>();
+
             services.AddSwaggerGen(p=> 
             {
                 p.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Order Api", Version = "v1" });
@@ -51,6 +81,8 @@ namespace ESourcing.Order
             {
                 endpoints.MapControllers();
             });
+
+            app.UseEventBusListener();
 
             app.UseSwagger();
             app.UseSwaggerUI(p => 
